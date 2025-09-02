@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poultry - RMDC (Merged)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; line-height: 1.6; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Header (figma1-style) */
+        header[role="banner"] { background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; gap: 16px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo img { width: 50px; height: 50px; }
+        .logo h1 { font-size: 24px; font-weight: 700; color: #006400; }
+        nav.primary-nav { position: relative; }
+        nav.primary-nav ul { list-style: none; display: flex; gap: 16px; align-items: center; }
+        nav.primary-nav a { font-size: 15px; padding: 6px 8px; border-radius: 6px; color: inherit; text-decoration: none; }
+        nav.primary-nav a:hover { color: #006400; }
+        nav.primary-nav a[aria-current="page"] { font-weight: 600; color: #006400; }
+        .login-btn { background-color: #e0e0e0; color: #006400; border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: all 0.3s ease; }
+        .login-btn:hover { background-color: #006400; color: white; }
+
+        /* Left Sidebar (site section nav) */
+        .sidebar { width: 200px; background-color: white; border-right: 1px solid #ddd; height: calc(100vh - 70px); position: fixed; top: 70px; left: 0; overflow-y: auto; padding: 20px 0; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 10px; }
+        .sidebar-menu a { display: flex; align-items: center; padding: 12px 15px; text-decoration: none; color: #333; transition: background-color 0.3s ease; border-radius: 5px; }
+        .sidebar-menu a:hover { background-color: #f0f0f0; }
+        .sidebar-menu a.active { background-color: #2e9a2e; color: white; }
+        .sidebar-menu i { margin-right: 10px; font-size: 16px; }
+
+        /* Main Content shell */
+        .main-content { margin-left: 200px; padding: 20px; }
+
+        /* Breadcrumb - standardized to match figma16.html */
+        .breadcrumb { display: flex; gap: 1rem; margin-bottom: 1.5rem; color: #555; font-size: 0.95rem; }
+        .breadcrumb a { text-decoration: none; color: #555; }
+        .breadcrumb a:hover { color: #2e7d32; }
+        .breadcrumb .current { color: #2e7d32; font-weight: 600; }
+
+        /* Tabs */
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #ddd; }
+        .tab { padding: 10px 15px; cursor: pointer; transition: background-color 0.3s ease; }
+        .tab.active { border-bottom: 2px solid #2e9a2e; color: #2e9a2e; }
+
+        /* Buttons */
+        .back-btn, .business-plan-btn, .action-btn { background-color: #2e9a2e; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; }
+        .back-btn:hover, .business-plan-btn:hover, .action-btn:hover { background-color: #227c22; }
+
+        /* Image Section */
+        .image-section { margin-bottom: 20px; position: relative; }
+        .image-section img { width: 100%; height: 300px; object-fit: cover; border-radius: 5px; }
+
+        /* Stats Cards (figma7 + figma8 styles unified) */
+        .stats-cards { display: flex; gap: 20px; margin-top: 20px; margin-bottom: 30px; }
+        .stats-card { background-color: white; border-radius: 5px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex: 1; text-align: center; }
+        .stats-card h3 { font-size: 16px; margin-bottom: 10px; color: #555; }
+        .stats-card p { font-size: 14px; color: #555; }
+        .stats-card .value { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .stats-card .change { font-size: 14px; color: #2e9a2e; }
+
+        /* Section Header (from figma8) */
+        .section-header { margin: 30px 0 20px; }
+        .section-header h2 { font-size: 24px; margin-bottom: 15px; color: #222; }
+        .section-header p { font-size: 16px; color: #555; }
+
+        /* Challenges & Opportunities (from figma8/9) */
+        .challenges-section { margin-bottom: 30px; }
+        .challenges-section h3 { font-size: 20px; margin-bottom: 15px; color: #222; }
+        .challenges-section p { font-size: 16px; color: #555; margin-bottom: 20px; }
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+
+        /* Growth Overview (from figma8/9) */
+        .growth-overview { margin-bottom: 30px; }
+        .growth-overview h3 { font-size: 20px; margin-bottom: 15px; color: #222; }
+        .growth-overview .toggle { font-size: 14px; color: #555; margin-bottom: 15px; cursor: pointer; }
+        .chart-container { height: 200px; background-color: #f0f0f0; border-radius: 5px; position: relative; overflow: hidden; }
+        .chart-bar { position: absolute; bottom: 0; width: 50px; background-color: #2e9a2e; opacity: 0.8; }
+        .chart-label { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #555; }
+
+        /* Top Farming States (from figma8/9) */
+        .top-states { margin-bottom: 30px; }
+        .top-states h3 { font-size: 20px; margin-bottom: 15px; color: #222; }
+        .state-item { margin-bottom: 15px; display: flex; align-items: center; }
+        .state-name { flex: 1; font-size: 16px; color: #222; }
+        .state-progress { flex: 2; height: 10px; background-color: #eee; border-radius: 5px; overflow: hidden; margin: 0 10px; }
+        .state-fill { height: 100%; background-color: #2e9a2e; }
+        .state-percentage { font-size: 14px; color: #555; }
+
+        /* Content Section (two-column from figma9, renamed to avoid class conflicts) */
+        .content-section { display: flex; gap: 20px; margin-bottom: 30px; }
+        .content-main { flex: 3; }
+        .content-aside { flex: 1; }
+
+        /* Advertisement Banner (from figma9) */
+        .advertisement-banner { background-color: #2e9a2e; color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 30px 0; position: relative; padding: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .advertisement-text { flex: 1; }
+        .advertisement-text h2 { font-size: 18px; margin-bottom: 10px; }
+        .advertisement-text p { font-size: 16px; }
+        .close-btn { position: absolute; top: 10px; right: 10px; background-color: transparent; color: white; border: none; font-size: 20px; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .tractor-image { width: 120px; height: 100px; object-fit: cover; }
+
+        /* Inline Footer (from figma9) */
+        .footer { background-color: #2e9a2e; color: white; padding: 15px 0; text-align: center; font-size: 14px; border-radius: 8px; }
+        .footer-links { display: flex; justify-content: space-around; margin-top: 10px; }
+        .footer-links a { color: white; text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: #ddd; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .breadcrumb { font-size: 1rem; }
+            .back-btn, .business-plan-btn { float: none; margin-bottom: 20px; }
+            .stats-cards { flex-direction: column; }
+            .action-buttons { flex-direction: column; }
+            .chart-container { height: 150px; }
+            .content-section { flex-direction: column; }
+            .advertisement-banner { flex-direction: column; text-align: center; }
+            .advertisement-text { margin-bottom: 15px; }
+        }
+    </style>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header (figma1-style) -->
+    <header role="banner">
+        <div class="container header-top">
+            <div class="logo">
+                <img src="https://placehold.co/50x50/006400/fff?text=RMDC" alt="RMDC Logo">
+                <h1>RMDC</h1>
+            </div>
+            <nav class="primary-nav" aria-label="Primary">
+                <ul class="nav-links" id="primary-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="figma3.html">Statistics</a></li>
+                    <li><a href="figma4.html">Agricultural Raw Materials</a></li>
+                    <li><a href="figma16.html">Import & Export</a></li>
+                    <li><a href="figma17.html">Industries</a></li>
+                    <li><a class="login-btn" href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar (fixed) -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#"><i class="fas fa-seedling"></i> Crops</a></li>
+                <li><a href="figma5.html" class="active"><i class="fas fa-paw"></i> Livestock</a></li>
+                <li><a href="#"><i class="fas fa-fish"></i> Fishery</a></li>
+                <li><a href="#"><i class="fas fa-tree"></i> Forestry</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content (scrollable) -->
+        <div class="main-content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="#">Agriculture</a>
+                <span>›</span>
+                <a href="figma5.html">Livestock</a>
+                <span>›</span>
+                <span>Poultry</span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active"><i class="fas fa-file-alt"></i> Overview</div>
+                <div class="tab"><a href="figma10.html" style="text-decoration: none; color: inherit;"><i class="fas fa-dove"></i> Poultry birds</a></div>
+            </div>
+
+            <!-- Back Button and Business Plan Button -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <button class="back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+                <button class="business-plan-btn"><i class="fas fa-download"></i> Business plan</button>
+            </div>
+
+            <!-- Hero Image (from figma7) -->
+            <div class="image-section">
+                <img src="https://placehold.co/1200x300/888/fff?text=Poultry+Farm" alt="Poultry Farm">
+            </div>
+
+            <!-- Stats Cards (from figma7) -->
+            <div class="stats-cards">
+                <div class="stats-card">
+                    <h3>Total Production Volume</h3>
+                    <p>150,000 tons</p>
+                </div>
+                <div class="stats-card">
+                    <h3>Sector Growth Rate (5-Year)</h3>
+                    <p>8.5%</p>
+                </div>
+            </div>
+
+            <!-- Poultry Overview Section (from figma8) -->
+            <div class="section-header">
+                <h2>Poultry</h2>
+                <p>The poultry sector in Nigeria is a significant contributor to the national economy, providing employment and food security for millions. This overview presents key statistics, challenges, and opportunities within the sector.</p>
+            </div>
+
+            <!-- Stats Cards (from figma8) -->
+            <div class="stats-cards">
+                <div class="stats-card">
+                    <h3>Total Production Volume (2023)</h3>
+                    <div class="value">1.8M metric tons</div>
+                    <div class="change">+21%</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Sector Growth Rate (5-Year Avg)</h3>
+                    <div class="value">3.5%</div>
+                    <div class="change">+0.9%</div>
+                </div>
+            </div>
+
+            <!-- Challenges & Opportunities (from figma8) -->
+            <div class="challenges-section">
+                <h3>Challenges & Opportunities</h3>
+                <p>The Nigerian poultry sector faces challenges such as high input costs, disease outbreaks, and market access issues. However, opportunities exist in value chain development, improved breeding practices, and enhanced biosecurity measures.</p>
+                <div class="action-buttons">
+                    <button class="action-btn">Stakeholders</button>
+                    <button class="action-btn">Interactive map</button>
+                </div>
+            </div>
+
+            <!-- Growth Overview (from figma8) -->
+            <div class="growth-overview">
+                <h3>Growth Overview</h3>
+                <div class="toggle">Engagement of posts you created</div>
+                <div class="chart-container">
+                    <div class="chart-bar" style="left: 10%; height: 100px;"></div>
+                    <div class="chart-label" style="left: 10%">1%</div>
+                    <div class="chart-bar" style="left: 30%; height: 150px;"></div>
+                    <div class="chart-label" style="left: 30%">2%</div>
+                    <div class="chart-bar" style="left: 50%; height: 180px;"></div>
+                    <div class="chart-label" style="left: 50%">3%</div>
+                    <div class="chart-bar" style="left: 70%; height: 120px;"></div>
+                    <div class="chart-label" style="left: 70%">4%</div>
+                </div>
+            </div>
+
+            <!-- Top Farming States (from figma8) -->
+            <div class="top-states">
+                <h3>Top Farming States</h3>
+                <div class="state-item"><div class="state-name">Lagos</div><div class="state-progress"><div class="state-fill" style="width: 70%;"></div></div><div class="state-percentage">70%</div></div>
+                <div class="state-item"><div class="state-name">Abuja</div><div class="state-progress"><div class="state-fill" style="width: 60%;"></div></div><div class="state-percentage">60%</div></div>
+                <div class="state-item"><div class="state-name">Anambra</div><div class="state-progress"><div class="state-fill" style="width: 20%;"></div></div><div class="state-percentage">20%</div></div>
+                <div class="state-item"><div class="state-name">Edo</div><div class="state-progress"><div class="state-fill" style="width: 10%;"></div></div><div class="state-percentage">10%</div></div>
+                <div class="state-item"><div class="state-name">Kogi</div><div class="state-progress"><div class="state-fill" style="width: 30%;"></div></div><div class="state-percentage">30%</div></div>
+                <div class="state-item"><div class="state-name">Jos</div><div class="state-progress"><div class="state-fill" style="width: 60%;"></div></div><div class="state-percentage">60%</div></div>
+            </div>
+
+            <!-- Additional Insights Section (from figma9) -->
+            <div class="content-section">
+                <div class="content-main">
+                    <div class="challenges-section">
+                        <p>The Nigerian poultry sector faces challenges such as high input costs, disease outbreaks, and market access issues. However, opportunities exist in value chain development, improved breeding practices, and enhanced biosecurity measures.</p>
+                        <div class="action-buttons">
+                            <button class="action-btn">Stakeholders</button>
+                            <button class="action-btn">Interactive map</button>
+                        </div>
+                    </div>
+                    <div class="growth-overview">
+                        <h3>Growth Overview</h3>
+                        <div class="toggle">Engagement of posts you created</div>
+                        <div class="chart-container" style="background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: 300px;">
+                            <div class="chart-bar" style="left: 10%; height: 100px; width: 50px; border-radius: 5px;"></div>
+                            <div class="chart-label" style="left: 10%">2001-2003</div>
+                            <div class="chart-bar" style="left: 25%; height: 150px; width: 50px; border-radius: 5px;"></div>
+                            <div class="chart-label" style="left: 25%">2004-2007</div>
+                            <div class="chart-bar" style="left: 40%; height: 80px; width: 50px; border-radius: 5px;"></div>
+                            <div class="chart-label" style="left: 40%">2008-2011</div>
+                            <div class="chart-bar" style="left: 55%; height: 180px; width: 50px; border-radius: 5px;"></div>
+                            <div class="chart-label" style="left: 55%">2012-2016</div>
+                            <div class="chart-bar" style="left: 70%; height: 120px; width: 50px; border-radius: 5px;"></div>
+                            <div class="chart-label" style="left: 70%">2017-2019</div>
+                            <div class="chart-bar" style="left: 85%; height: 160px; width: 50px; border-radius: 5px;"></div>
+                            <div class="chart-label" style="left: 85%">2020-2023</div>
+                        </div>
+                    </div>
+                </div>
+                <aside class="content-aside">
+                    <div class="top-states">
+                        <h3>Top Farming States</h3>
+                        <div class="state-item"><div class="state-name">Lagos</div><div class="state-progress"><div class="state-fill" style="width: 70%;"></div></div><div class="state-percentage">70%</div></div>
+                        <div class="state-item"><div class="state-name">Abuja</div><div class="state-progress"><div class="state-fill" style="width: 60%;"></div></div><div class="state-percentage">60%</div></div>
+                        <div class="state-item"><div class="state-name">Anambra</div><div class="state-progress"><div class="state-fill" style="width: 20%;"></div></div><div class="state-percentage">20%</div></div>
+                        <div class="state-item"><div class="state-name">Edo</div><div class="state-progress"><div class="state-fill" style="width: 10%;"></div></div><div class="state-percentage">10%</div></div>
+                        <div class="state-item"><div class="state-name">Kogi</div><div class="state-progress"><div class="state-fill" style="width: 30%;"></div></div><div class="state-percentage">30%</div></div>
+                        <div class="state-item"><div class="state-name">Jos</div><div class="state-progress"><div class="state-fill" style="width: 60%;"></div></div><div class="state-percentage">60%</div></div>
+                        <div class="state-item"><div class="state-name">Enugu</div><div class="state-progress"><div class="state-fill" style="width: 17%;"></div></div><div class="state-percentage">17%</div></div>
+                        <div class="state-item"><div class="state-name">Delta</div><div class="state-progress"><div class="state-fill" style="width: 48%;"></div></div><div class="state-percentage">48%</div></div>
+                        <div class="state-item"><div class="state-name">Osun</div><div class="state-progress"><div class="state-fill" style="width: 60%;"></div></div><div class="state-percentage">60%</div></div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Advertisement Banner (from figma9) -->
+            <div class="advertisement-banner">
+                <button class="close-btn" aria-label="Close">×</button>
+                <div class="advertisement-text">
+                    <h2>Connect with Flappy Farm, Get 50% off, On any purchase</h2>
+                    <p>Download our mobile app today and enjoy exclusive discounts on all your purchases.</p>
+                </div>
+                <img src="https://placehold.co/120x100/2e9a2e/fff?text=Tractor" alt="Tractor" class="tractor-image">
+            </div>
+
+            <!-- Inline Footer (from figma9) -->
+            <div class="footer">
+                <div class="footer-links">
+                    <a href="#">NRMIMS</a>
+                    <a href="#">Navigations</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Socials</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

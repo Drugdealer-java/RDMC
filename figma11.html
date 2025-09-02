@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RMDC - Commodities</title>
+  <style>
+    /* Reset and base styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; height: auto; }
+
+    /* Focus visibility */
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #1a73e8; outline-offset: 2px; }
+
+    /* Visually hidden (for accessible labels) */
+    .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+    /* Skip Link */
+    .skip-link { position: absolute; left: -999px; top: -999px; }
+    .skip-link:focus { position: absolute; left: 16px; top: 16px; z-index: 1000; background: #000; color: #fff; padding: 8px 12px; border-radius: 6px; }
+
+    .container { display: flex; min-height: 100vh; }
+
+    /* Header */
+    header { width: 100%; background-color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 100; }
+    .header-content { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; max-width: 1200px; margin: 0 auto; gap: 16px; }
+
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo img { width: 50px; height: 50px; }
+    .logo h1 { font-size: 24px; font-weight: 700; color: #006400; }
+
+    nav.primary-nav { position: relative; }
+    .nav-links { display: flex; list-style: none; gap: 16px; align-items: center; }
+    .nav-links li a { font-size: 15px; padding: 6px 8px; border-radius: 6px; transition: color 0.3s; }
+    .nav-links li a:hover { color: #006400; }
+    .nav-links li a[aria-current="page"] { font-weight: 600; color: #006400; }
+
+    .login-btn { background: #e0e0e0; color: #006400; padding: 8px 14px; border-radius: 20px; font-size: 14px; border: none; cursor: pointer; transition: background-color 0.3s; }
+    .login-btn:hover { background: #006400; color: #fff; }
+
+    /* Sidebar */
+    aside { width: 250px; background-color: white; box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); padding: 1rem 0; height: calc(100vh - 70px); position: fixed; top: 70px; left: 0; z-index: 99; overflow-y: auto; }
+    .sidebar-menu { list-style: none; padding: 0; }
+    .sidebar-menu li { padding: 1rem 1rem 1rem 2rem; border-bottom: 1px solid #eee; transition: background-color 0.3s; }
+    .sidebar-menu li:hover { background-color: #f5f5f5; }
+    .sidebar-menu li.active { background-color: #2e7d32; color: white; }
+    .sidebar-menu li a { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; color: #333; }
+    .sidebar-menu li.active a { color: white; }
+
+    /* Main Content */
+    main { flex: 1; margin-left: 250px; padding: 2rem; }
+
+    /* Breadcrumb */
+    .breadcrumb { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; font-size: 0.95rem; color: #555; }
+    .breadcrumb a { color: #555; text-decoration: none; }
+    .breadcrumb a:hover { color: #2e7d32; }
+    .breadcrumb a.active { color: #2e7d32; font-weight: 600; }
+    .breadcrumb span { margin: 0; }
+    @media (max-width: 768px) {
+      .breadcrumb { font-size: 1rem; }
+    }
+
+    /* Headings */
+    h1.page-title { font-size: 1.6rem; margin-bottom: 1rem; color: #222; }
+
+    /* Search Bar */
+    .search-container { display: flex; justify-content: space-between; align-items: center; background-color: white; border-radius: 8px; padding: 0.5rem; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 1.5rem; width: 100%; }
+    .search-input-wrapper { display: flex; align-items: center; gap: 0.5rem; flex: 1; background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 0 0.5rem; }
+    .search-icon { color: #2e7d32; margin-right: 0.25rem; }
+    .search-input { flex: 1; border: none; outline: none; font-size: 0.95rem; padding: 0.5rem 0.75rem; border-radius: 4px; }
+    .search-btn { background-color: #2e7d32; color: white; border: none; border-radius: 20px; padding: 0.6rem 1rem; font-size: 0.95rem; cursor: pointer; transition: background-color 0.3s; }
+    .search-btn:hover { background-color: #218838; }
+
+    /* Table */
+    .table-container { background-color: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); overflow: hidden; }
+    .table-header { display: grid; grid-template-columns: 1fr 2fr 1fr; padding: 1rem; background-color: #f5f5f5; border-bottom: 1px solid #ddd; }
+    .table-header h3 { font-size: 0.9rem; color: #555; font-weight: 500; }
+    .table-body { display: block; }
+    .table-row { padding: 1rem; border-bottom: 1px solid #eee; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; }
+    .table-row:last-child { border-bottom: none; }
+    .table-row.active { background-color: #2e7d32; color: white; }
+    .table-row.active .bird-type, .table-row.active .summary, .table-row.active .price-range { color: white; }
+
+    .bird-type { display: flex; align-items: center; gap: 1rem; }
+    .bird-icon { width: 30px; height: 30px; border-radius: 50%; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; }
+    .bird-name { font-weight: 500; }
+
+    .summary { color: #555; font-size: 0.95rem; }
+    .price-range { font-weight: 600; color: #444; }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .header-content { padding: 1rem; }
+      .search-container { flex-direction: column; gap: 0.5rem; align-items: stretch; }
+      .search-btn { width: 100%; }
+    }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      aside { width: 100%; position: static; height: auto; top: auto; }
+      main { margin-left: 0; padding: 1rem; }
+      .breadcrumb { flex-wrap: wrap; }
+      .table-header { display: none; }
+      .table-row { display: block; padding: 1rem 0; }
+      .bird-type { display: block; margin-bottom: 0.5rem; }
+      .bird-icon { width: 25px; height: 25px; }
+      .summary { margin-bottom: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Header -->
+  <header role="banner">
+    <div class="header-content">
+      <div class="logo">
+        <img src="https://placehold.co/50x50/006400/fff?text=RMDC" alt="RMDC Logo" />
+        <h1>RMDC</h1>
+      </div>
+      <nav class="primary-nav" aria-label="Primary">
+        <ul class="nav-links" id="primary-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="figma3.html">Statistics</a></li>
+          <li><a href="figma4.html">Agricultural Raw Materials</a></li>
+          <li><a href="figma16.html">Import &amp; Export</a></li>
+          <li><a href="figma17.html">Industries</a></li>
+          <li><a class="login-btn" href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="container">
+    <!-- Sidebar -->
+    <aside>
+      <ul class="sidebar-menu">
+        <li><a href="#"><span>📊</span> Trade/Financial stats</a></li>
+        <li class="active"><a href="#"><span>🌾</span> Commodities</a></li>
+        <li><a href="#"><span>⚙️</span> Process technology</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span>›</span>
+        <a href="#" class="active">Commodities</a>
+      </nav>
+
+      <h1 class="page-title">Commodities</h1>
+
+      <!-- Search Bar -->
+      <form class="search-container" role="search" action="#" method="get">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <label class="visually-hidden" for="q">Search for a commodity or product</label>
+          <input id="q" name="q" type="search" class="search-input" placeholder="Search for a commodity or product" aria-label="Search for a commodity or product" />
+        </div>
+        <button class="search-btn" type="submit">Search</button>
+      </form>
+
+      <!-- Table -->
+      <div class="table-container">
+        <div class="table-header" role="row">
+          <h3>Bird Type</h3>
+          <h3>Summary</h3>
+          <h3>Price range</h3>
+        </div>
+        
+        <div class="table-body">
+          <!-- Chicken Row -->
+          <div class="table-row active">
+            <div class="bird-type">
+              <div class="bird-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;" aria-hidden="true">
+                  <path d="M12 2L4 6v12h16V6l-8-4z"></path>
+                  <circle cx="12" cy="10" r="2"></circle>
+                  <path d="M12 16l-2-2 2-2 2 2-2 2z"></path>
+                </svg>
+              </div>
+              <div class="bird-name">Chicken</div>
+            </div>
+            <div class="summary">Most common poultry bird in Nigeria</div>
+            <div class="price-range">₦3,000/kg</div>
+          </div>
+          
+          <!-- Duck Row -->
+          <div class="table-row">
+            <div class="bird-type">
+              <div class="bird-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;" aria-hidden="true">
+                  <path d="M12 2L4 6v12h16V6l-8-4z"></path>
+                  <circle cx="12" cy="10" r="2"></circle>
+                  <path d="M12 16l-2-2 2-2 2 2-2 2z"></path>
+                </svg>
+              </div>
+              <div class="bird-name">Duck</div>
+            </div>
+            <div class="summary">Known for meat and eggs, adaptable to wet environments</div>
+            <div class="price-range">₦3,000/kg</div>
+          </div>
+          
+          <!-- Turkey Row -->
+          <div class="table-row">
+            <div class="bird-type">
+              <div class="bird-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;" aria-hidden="true">
+                  <path d="M12 2L4 6v12h16V6l-8-4z"></path>
+                  <circle cx="12" cy="10" r="2"></circle>
+                  <path d="M12 16l-2-2 2-2 2 2-2 2z"></path>
+                </svg>
+              </div>
+              <div class="bird-name">Turkey</div>
+            </div>
+            <div class="summary">Larger bird, popular for meat during festive seasons</div>
+            <div class="price-range">₦3,000/kg</div>
+          </div>
+          
+          <!-- Guinea Fowl Row -->
+          <div class="table-row">
+            <div class="bird-type">
+              <div class="bird-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;" aria-hidden="true">
+                  <path d="M12 2L4 6v12h16V6l-8-4z"></path>
+                  <circle cx="12" cy="10" r="2"></circle>
+                  <path d="M12 16l-2-2 2-2 2 2-2 2z"></path>
+                </svg>
+              </div>
+              <div class="bird-name">Guinea Fowl</div>
+            </div>
+            <div class="summary">Known for pest control and unique eggs</div>
+            <div class="price-range">₦3,000/kg</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

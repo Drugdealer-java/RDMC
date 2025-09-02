@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RMDC - Industries</title>
+  <style>
+    :root {
+      --brand: #006400; /* Dark green from figma1 */
+      --muted: #e0e0e0;
+    }
+    /* Reset & Base Styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f9f9f9; color: #333; line-height: 1.6; }
+
+    /* Container (from figma1) */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header copied to match figma1 */
+    header[role="banner"] { background-color: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo img { width: 50px; height: 50px; }
+    .logo span { font-size: 24px; font-weight: 700; color: var(--brand); }
+
+    /* Primary nav copied from figma1 */
+    nav.primary-nav { position: relative; }
+    nav.primary-nav ul { list-style: none; display: flex; gap: 16px; align-items: center; }
+    nav.primary-nav a { font-size: 15px; padding: 6px 8px; border-radius: 6px; color: inherit; text-decoration: none; }
+    nav.primary-nav a:hover { color: var(--brand); }
+    nav.primary-nav a[aria-current="page"] { font-weight: 600; color: var(--brand); }
+
+    /* Login button style matched to figma1 */
+    .login-btn { background: var(--muted); color: var(--brand); padding: 8px 14px; border-radius: 20px; font-size: 14px; }
+    .login-btn:hover { background: var(--brand); color: #fff; }
+
+    /* Content Layout as before */
+    .container-page { display: flex; min-height: calc(100vh - 60px); }
+
+    /* Sidebar */
+    .sidebar { width: 200px; background-color: white; box-shadow: 2px 0 4px rgba(0,0,0,0.1); padding: 1rem 0; position: fixed; height: calc(100vh - 60px); overflow-y: auto; }
+    .sidebar ul { list-style: none; }
+    .sidebar li { padding: 1rem 1rem; border-bottom: 1px solid #eee; cursor: pointer; }
+    .sidebar li:hover { background-color: #f1f1f1; }
+    .sidebar li.active { background-color: #2e7d32; color: white; }
+    .sidebar i { margin-right: 8px; }
+
+    /* Content Area */
+    .content { flex: 1; margin-left: 200px; padding: 2rem; }
+
+    /* Breadcrumb - standardized to match figma16.html */
+    .breadcrumb { display: flex; gap: 1rem; margin-bottom: 1.5rem; color: #555; font-size: 0.95rem; }
+    .breadcrumb a { text-decoration: none; color: #555; }
+    .breadcrumb a:hover { color: #2e7d32; }
+    .breadcrumb a.active { color: #2e7d32; font-weight: 600; }
+    @media (max-width: 768px) {
+      .breadcrumb { flex-wrap: wrap; }
+    }
+
+    /* Section Title */
+    h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+
+    /* Description */
+    .description { color: #666; margin-bottom: 2rem; font-size: 0.95rem; }
+
+    /* Chart Container */
+    .chart-container { background-color: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 1rem; }
+    .chart-title { font-size: 1.1rem; margin-bottom: 1rem; color: #333; }
+    .growth-text { font-size: 1.5rem; color: #2e7d32; font-weight: 600; margin: 1rem 0; }
+    .dropdown { float: right; margin-top: -0.5rem; font-size: 0.85rem; color: #666; }
+
+    /* Chart SVG */
+    .chart { width: 100%; height: 200px; margin-top: 1rem; position: relative; }
+    .chart svg { width: 100%; height: 100%; }
+
+    /* Taskbar (Bottom) */
+
+  </style>
+</head>
+<body>
+
+  <!-- Header (structure copied to match figma1) -->
+  <header role="banner">
+    <div class="container header-top">
+      <div class="logo">
+        <img src="https://placehold.co/50x50/006400/fff?text=RMDC" alt="RMDC Logo" />
+        <span>RMDC</span>
+      </div>
+      <div class="actions">
+        <!-- Keeping structure consistent with figma1; toggle not functional here -->
+      </div>
+      <nav class="primary-nav" aria-label="Primary">
+        <ul class="nav-links" id="primary-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="figma3.html">Statistics</a></li>
+          <li><a href="figma4.html">Agricultural Raw Materials</a></li>
+          <li><a href="figma16.html">Import & Export</a></li>
+          <li><a href="figma17.html" aria-current="page">Industries</a></li>
+          <li><a class="login-btn" href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="container-page">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="figma12.html" style="text-decoration: none; color: inherit;"><i>📋</i> Overview</a></li>
+        <li><a href="figma13.html" style="text-decoration: none; color: inherit;"><i>📊</i> Derivatives</a></li>
+        <li class="active"><i>🏭</i> Industries</li>
+        <li><i>📦</i> Import & Export</li>
+        <li><i>📈</i> Trade/Financial stats</li>
+        <li><i>🌾</i> Commodities</li>
+        <li><i>⚙️</i> Process technology</li>
+      </ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a href="#">Agriculture</a>
+        <span>›</span>
+        <a href="figma5.html">Livestock</a>
+        <span>›</span>
+        <a href="figma7.html">Poultry</a>
+        <span>›</span>
+        <a href="#">Chicken</a>
+        <span>›</span>
+        <a href="#" class="active">Industries</a>
+      </nav>
+
+      <!-- Section Title -->
+      <h1>Industries</h1>
+
+      <!-- Description -->
+      <p class="description">
+        Compare the growth trends of different industries within the poultry sector over time. Select industries to view their growth in terms of production volume, market value, or other relevant metrics. Adjust the time period for comparison using the slider below.
+      </p>
+
+      <!-- Chart Container -->
+      <div class="chart-container">
+        <div class="chart-title">Industry Growth Trends</div>
+        <div class="dropdown">Weekly</div>
+        <div class="growth-text">+60% Since 2018</div>
+        <div class="chart">
+          <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid lines -->
+            <g stroke="#ddd" stroke-width="1" opacity="0.5">
+              <line x1="0" y1="50" x2="800" y2="50"/>
+              <line x1="0" y1="100" x2="800" y2="100"/>
+              <line x1="0" y1="150" x2="800" y2="150"/>
+              <line x1="0" y1="200" x2="800" y2="200"/>
+              <line x1="0" y1="0" x2="800" y2="0"/>
+            </g>
+            <!-- Y-axis labels -->
+            <g font-size="10" fill="#666">
+              <text x="-10" y="50" text-anchor="end" transform="rotate(-90, -10, 50)">15k</text>
+              <text x="-10" y="100" text-anchor="end" transform="rotate(-90, -10, 100)">10k</text>
+              <text x="-10" y="150" text-anchor="end" transform="rotate(-90, -10, 150)">5k</text>
+              <text x="-10" y="200" text-anchor="end" transform="rotate(-90, -10, 200)">0k</text>
+            </g>
+            <!-- Area Fill -->
+            <path d="M0,150 
+                     C100,100 150,120 200,130 
+                     C250,140 300,110 350,120 
+                     C400,130 450,100 500,110 
+                     C550,120 600,130 650,140 
+                     C700,150 750,120 800,130"
+                  fill="#e8f5e8" stroke="none" opacity="0.6" />
+            <!-- Line -->
+            <path d="M0,150 
+                     C100,100 150,120 200,130 
+                     C250,140 300,110 350,120 
+                     C400,130 450,100 500,110 
+                     C550,120 600,130 650,140 
+                     C700,150 750,120 800,130"
+                  fill="none" stroke="#2e7d32" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+
+</body>
+</html>

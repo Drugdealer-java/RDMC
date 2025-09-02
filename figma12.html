@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: #e9e9e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-dropdown {
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .nav-dropdown::after {
+            content: "▼";
+            margin-left: 5px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            background-color: #f00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .btn-share {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+            z-index: 99;
+            margin-top: 60px; /* header height */
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item.active {
+            background-color: #2e9a1c;
+            color: white;
+        }
+        
+        .sidebar-item:hover:not(.active) {
+            background-color: #f5f5f5;
+        }
+        
+        .sidebar-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 2rem;
+            background-color: #f5f5f5;
+        }
+        
+        /* Breadcrumb - standardized to match figma16.html */
+        .breadcrumb {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        .breadcrumb a {
+            text-decoration: none;
+            color: #555;
+        }
+        
+        .breadcrumb a:hover {
+            color: #2e7d32;
+        }
+        
+        .breadcrumb .current {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .back-button {
+            background-color: #2e9a1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+            float: right;
+        }
+        
+        .back-button svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .download-button {
+            background-color: white;
+            color: #2e9a1c;
+            border: 1px solid #2e9a1c;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+            float: right;
+            font-weight: 600;
+        }
+        
+        .download-button svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .image-container {
+            width: 350px;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-right: 1.5rem;
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-title {
+            font-size: 16px;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-change {
+            font-size: 14px;
+            color: #2e9a1c;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #2e9a1c;
+            border-radius: 5px;
+        }
+        
+        .progress-yellow {
+            background-color: #fbbf24;
+        }
+        
+        .info-section {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-title {
+            font-size: 18px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .info-text {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .top-states {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+        
+        .state-item {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .state-name {
+            font-size: 16px;
+        }
+        
+        .state-progress {
+            width: 100%;
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .state-fill {
+            height: 100%;
+            background-color: #2e9a1c;
+            border-radius: 4px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: white;
+        }
+        
+        .pagination-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .pagination-btn.active {
+            background-color: #2e9a1c;
+            color: white;
+            border-color: #2e9a1c;
+        }
+        
+        /* Icons */
+        .icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        
+        .arrow-left {
+            transform: rotate(180deg);
+        }
+        
+        @media (max-width: 1024px) {
+            .content {
+                padding: 1rem;
+            }
+            
+            .info-section {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.5rem;
+            }
+            
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-item {
+                padding: 1rem 0.5rem;
+                justify-content: center;
+            }
+            
+            .sidebar-item span {
+                display: none;
+            }
+            
+            .sidebar-item .icon {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .breadcrumb {
+                flex-wrap: wrap;
+            }
+            
+            .image-container {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .info-section {
+                flex-direction: column;
+            }
+            
+            .top-states {
+                margin-top: 1rem;
+            }
+        }
+    /* Header (figma1-style nav) */
+    header[role="banner"] { background-color: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+    .container.header-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo img { width: 50px; height: 50px; }
+    .logo h1 { font-size: 24px; font-weight: 700; color: #006400; }
+    nav.primary-nav { position: relative; }
+    nav.primary-nav ul { list-style: none; display: flex; gap: 16px; align-items: center; }
+    nav.primary-nav a { font-size: 15px; padding: 6px 8px; border-radius: 6px; color: inherit; text-decoration: none; }
+    nav.primary-nav a:hover { color: #006400; }
+    nav.primary-nav a[aria-current="page"] { font-weight: 600; color: #006400; }
+    .login-btn { background: #e0e0e0; color: #006400; padding: 8px 14px; border-radius: 20px; font-size: 14px; }
+    .login-btn:hover { background: #006400; color: #fff; }
+    </style>
+</head>
+<body>
+        <header role="banner">
+        <div class="container header-top">
+            <div class="logo">
+                <img src="https://placehold.co/50x50/006400/fff?text=RMDC" alt="RMDC Logo">
+                <h1>RMDC</h1>
+            </div>
+            <nav class="primary-nav" aria-label="Primary">
+                <ul class="nav-links" id="primary-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="figma3.html">Statistics</a></li>
+                    <li><a href="figma4.html">Agricultural Raw Materials</a></li>
+                    <li><a href="figma16.html">Import & Export</a></li>
+                    <li><a href="figma17.html">Industries</a></li>
+                    <li><a class="login-btn" href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="main-container">
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active">
+                    <a href="figma12.html" style="text-decoration: none; color: inherit;">
+                        <span class="sidebar-icon">📋</span>
+                        Overview
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="figma13.html" style="text-decoration: none; color: inherit;">
+                        <span class="sidebar-icon">📊</span>
+                        Derivatives
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="figma17.html" style="text-decoration: none; color: inherit;">
+                        <span class="sidebar-icon">🏭</span>
+                        Industries
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="figma16.html" style="text-decoration: none; color: inherit;">
+                        <span class="sidebar-icon">📦</span>
+                        Import & Export
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="figma15.html" style="text-decoration: none; color: inherit;">
+                        <span class="sidebar-icon">📈</span>
+                        Trade/Financial stats
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" style="text-decoration: none; color: inherit;">
+                        <span class="sidebar-icon">🌾</span>
+                        Commodities
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" style="text-decoration: none; color: inherit;">
+                        <span class="sidebar-icon">⚙️</span>
+                        Process technology
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="breadcrumb">
+                <a href="#">Agriculture</a>
+                <span>›</span>
+                <a href="figma5.html">Livestock</a>
+                <span>›</span>
+                <a href="figma7.html">Poultry</a>
+                <span>›</span>
+                <a href="#">Chicken</a>
+                <span>›</span>
+                <a href="figma12.html"><span class="current">Overview</span></a>
+            </div>
+            
+            <button class="back-button">
+                <svg class="icon arrow-left" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                Back
+            </button>
+            
+            <button class="download-button">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 9h-3.82L15 6.82l-3.17 2.18L9.82 9H6v10h12V9zM12 17.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                </svg>
+                Business plan
+            </button>
+            
+            <h1 class="section-title">Overview</h1>
+            
+            <div class="info-section">
+                <div class="info-content">
+                    <div class="image-container">
+                        <img src="https://placehold.co/350x250/2e9a1c/ffffff?text=Chicken" alt="Chicken">
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-title">Total Production Volume (2023)</div>
+                            <div class="stat-value">18M metric tons</div>
+                            <div class="stat-change">+2.1%</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-title">Sector Growth Rate (5-Year Avg)</div>
+                            <div class="stat-value">3.5%</div>
+                            <div class="stat-change">+0.9%</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-title">Price Range</div>
+                            <div class="stat-value">Price Increase Rate Over 5 Years</div>
+                            <div class="stat-change">+25.9%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-title">Demand Rate</div>
+                            <div class="stat-value">Increase Demand Rate Over 5 Years</div>
+                            <div class="stat-change">+35.9%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-yellow" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <div class="info-content">
+                            <h2 class="info-title">Economic Value</h2>
+                            <p class="info-text">
+                                Live birds, including broilers, layers, and cockerels, represent a significant portion of the poultry industry's economic value. Broilers are primarily raised for meat, layers for eggs, and cockerels often as a by-product.
+                            </p>
+                            
+                            <div class="pagination">
+                                <button class="pagination-btn">
+                                    <svg class="icon arrow-left" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.59-4.59z"/>
+                                    </svg>
+                                </button>
+                                <button class="pagination-btn active">1</button>
+                                <button class="pagination-btn">2</button>
+                                <button class="pagination-btn">3</button>
+                            </div>
+                        </div>
+                        
+                        <div class="top-states">
+                            <h2 class="info-title">Top Producing States</h2>
+                            <div class="state-item">
+                                <span class="state-name">Jos</span>
+                                <div class="state-progress">
+                                    <div class="state-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="state-item">
+                                <span class="state-name">Lagos</span>
+                                <div class="state-progress">
+                                    <div class="state-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="state-item">
+                                <span class="state-name">Abuja</span>
+                                <div class="state-progress">
+                                    <div class="state-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div class="state-item">
+                                <span class="state-name">Kano</span>
+                                <div class="state-progress">
+                                    <div class="state-fill" style="width: 40%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Raw Materials - RMDC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header (aligned to figma1) */
+        header[role="banner"] {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #006400;
+        }
+
+        /* Primary nav copied from figma1 */
+        nav.primary-nav { position: relative; }
+        .nav-links { list-style: none; display: flex; gap: 16px; align-items: center; }
+        .nav-links a { color: #333; text-decoration: none; transition: color 0.3s ease; }
+        nav.primary-nav a { font-size: 15px; padding: 6px 8px; border-radius: 6px; }
+        nav.primary-nav a:hover { color: #006400; }
+        nav.primary-nav a[aria-current="page"] { font-weight: 600; color: #006400; }
+
+        .login-btn {
+            background-color: #e0e0e0;
+            color: #006400;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #006400;
+            color: white;
+        }
+
+        /* Page Title */
+        .page-title {
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background-color: #2e9a2e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+            float: right;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #227c22;
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background-color: transparent;
+        }
+
+        .search-button {
+            background-color: #2e9a2e;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #227c22;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-icon {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Advertisement Section */
+        .advertisement {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #d4f4d4;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .advertisement h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        /* Background Pattern */
+        .background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://placehold.co/1200x1000/f8f9fa/ffffff?text=Light+Pattern');
+            background-size: 100px 100px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .back-btn {
+                float: none;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="background-pattern"></div>
+
+    <!-- Header -->
+    <header role="banner">
+        <div class="container header-top">
+            <div class="logo">
+                <img src="https://placehold.co/50x50/006400/fff?text=RMDC" alt="RMDC Logo">
+                <h1>RMDC</h1>
+            </div>
+            <nav class="primary-nav" aria-label="Primary">
+                <ul class="nav-links" id="primary-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="figma3.html">Statistics</a></li>
+                    <li><a href="figma4.html" aria-current="page">Agricultural Raw Materials</a></li>
+                    <li><a href="figma16.html">Import & Export</a></li>
+                    <li><a href="figma17.html">Industries</a></li>
+                    <li><a class="login-btn" href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Page Title -->
+        <h1 class="page-title">Agricultural Raw Materials</h1>
+
+        <!-- Back Button -->
+        <button class="back-btn" onclick="window.history.back()" aria-label="Go back">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> Back
+        </button>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" placeholder="Search for a commodity or product" class="search-input" aria-label="Search commodities">
+            <button class="search-button">Search</button>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-grid">
+            <!-- Crops Card -->
+            <div class="card">
+                <img src="https://placehold.co/300x200/2e9a2e/fff?text=Crops" alt="Crops">
+                <div class="card-overlay">
+                    <div class="card-icon"><i class="fas fa-seedling"></i></div>
+                    <h3 class="card-title">Crops</h3>
+                </div>
+            </div>
+
+            <!-- Livestock Card -->
+            <div class="card">
+                <img src="https://placehold.co/300x200/888/fff?text=Livestock" alt="Livestock">
+                <div class="card-overlay">
+                    <div class="card-icon"><i class="fas fa-paw"></i></div>
+                    <h3 class="card-title"><a href="figma5.html">Livestock</a></h3>
+                </div>
+            </div>
+
+            <!-- Fishery Card -->
+            <div class="card">
+                <img src="https://placehold.co/300x200/444/fff?text=Fishery" alt="Fishery">
+                <div class="card-overlay">
+                    <div class="card-icon"><i class="fas fa-fish"></i></div>
+                    <h3 class="card-title">Fishery</h3>
+                </div>
+            </div>
+
+            <!-- Forestry Card -->
+            <div class="card">
+                <img src="https://placehold.co/300x200/1a1a2e/fff?text=Forestry" alt="Forestry">
+                <div class="card-overlay">
+                    <div class="card-icon"><i class="fas fa-tree"></i></div>
+                    <h3 class="card-title">Forestry</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advertisement Section -->
+        <div class="advertisement">
+            <h3>Advertisement</h3>
+            <div style="height: 100px; background-color: #a8e6cf; border-radius: 10px; margin-top: 10px;"></div>
+        </div>
+    </div>
+<script>
+      (function(){
+        const input = document.querySelector('.search-input');
+        const cards = Array.from(document.querySelectorAll('.cards-grid .card'));
+        if (input) {
+          input.addEventListener('input', function(){
+            const q = this.value.trim().toLowerCase();
+            cards.forEach(card => {
+              const titleEl = card.querySelector('.card-title');
+              const imgEl = card.querySelector('img');
+              const text = ((titleEl && titleEl.textContent) || '') + ' ' + ((imgEl && imgEl.alt) || '');
+              card.style.display = text.toLowerCase().includes(q) ? '' : 'none';
+            });
+          });
+        }
+        // Keyboard accessibility for cards
+        cards.forEach(card => {
+          card.tabIndex = 0;
+          card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              card.click();
+              e.preventDefault();
+            }
+          });
+        });
+      })();
+    </script>
+</body>
+</html>

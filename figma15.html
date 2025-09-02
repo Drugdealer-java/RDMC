@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RMDC - Trade/Financial Stats</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    .logo span {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-links li a {
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links li a:hover {
+      color: #2e7d32;
+    }
+
+    .login-btn {
+      background-color: #e8f5e8;
+      border: none;
+      border-radius: 20px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.95rem;
+      color: #2e7d32;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .login-btn:hover {
+      background-color: #c8e6c9;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 250px;
+      background-color: white;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+      height: calc(100vh - 70px);
+      position: fixed;
+      top: 70px;
+      left: 0;
+      z-index: 99;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar-menu li {
+      padding: 1rem 1rem 1rem 2rem;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s;
+    }
+
+    .sidebar-menu li:hover {
+      background-color: #f5f5f5;
+    }
+
+    .sidebar-menu li.active {
+      background-color: #2e7d32;
+      color: white;
+    }
+
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .sidebar-menu li.active a {
+      color: white;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      margin-left: 250px;
+      padding: 2rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .breadcrumb a {
+      color: #555;
+    }
+
+    .breadcrumb a.active {
+      color: #2e7d32;
+      font-weight: 600;
+    }
+
+    .back-btn {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      float: right;
+    }
+
+    .back-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .sub-title {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-title {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .card-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-change {
+      font-size: 0.9rem;
+      color: #4caf50;
+    }
+
+    /* Pie Chart */
+    .pie-chart {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .pie-chart .circle {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transform-origin: center;
+      transform: rotate(-90deg);
+    }
+
+    .pie-chart .slice {
+      fill: transparent;
+      stroke: none;
+    }
+
+    .pie-chart .percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .pie-chart .legend {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      gap: 1rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    /* Bar Charts */
+    .bar-chart {
+      width: 100%;
+      height: 200px;
+      position: relative;
+      margin-top: 1rem;
+    }
+
+    .bar-chart .bar {
+      position: absolute;
+      bottom: 0;
+      width: 20px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+    }
+
+    .bar-label {
+      position: absolute;
+      bottom: -20px;
+      width: 20px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    .bar-chart .axis {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #ddd;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .header-content {
+        padding: 1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      aside {
+        width: 100%;
+        position: static;
+        height: auto;
+      }
+      
+      main {
+        margin-left: 0;
+        padding: 1rem;
+      }
+      
+      .breadcrumb {
+        flex-wrap: wrap;
+      }
+      
+      .back-btn {
+        float: none;
+        margin: 0.5rem 0;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <img src="https://via.placeholder.com/50x50?text=LOGO" alt="RMDC Logo" />
+        <span>RMDC</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Publication</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><button class="login-btn">Login</button></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="container">
+    <!-- Sidebar -->
+    <aside>
+      <ul class="sidebar-menu">
+        <li><a href="figma12.html" style="text-decoration: none; color: inherit;"><span>📋</span> Overview</a></li>
+        <li><a href="figma13.html" style="text-decoration: none; color: inherit;"><span>📊</span> Derivatives</a></li>
+        <li><a href="figma17.html" style="text-decoration: none; color: inherit;"><span>🏭</span> Industries</a></li>
+        <li><a href="figma16.html" style="text-decoration: none; color: inherit;"><span>📦</span> Import & Export</a></li>
+        <li class="active"><a href="figma15.html" style="text-decoration: none; color: inherit;"><span>📈</span> Trade/Financial stats</a></li>
+        <li><a href="#" style="text-decoration: none; color: inherit;"><span>🌾</span> Commodities</a></li>
+        <li><a href="#" style="text-decoration: none; color: inherit;"><span>⚙️</span> Process technology</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="#">Agriculture</a>
+        <span>›</span>
+        <a href="#">Livestock</a>
+        <span>›</span>
+        <a href="#">Poultry</a>
+        <span>›</span>
+        <a href="#">Chicken</a>
+        <span>›</span>
+        <a href="#" class="active">Trade/Financial Stats</a>
+      </div>
+
+      <!-- Back Button -->
+      <button class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back
+      </button>
+
+      <!-- Page Title -->
+      <h1 class="section-title">Trade/Financial stats</h1>
+
+      <!-- Subtitle -->
+      <h2 class="sub-title">Government Support</h2>
+
+      <!-- Statistics Grid -->
+      <div class="stats-grid">
+        <!-- Support Program Participation -->
+        <div class="stat-card">
+          <div class="card-title">Support Program Participation</div>
+          <div class="card-change">Current Year +5%</div>
+          
+          <div class="pie-chart">
+            <svg width="150" height="150" viewBox="0 0 150 150">
+              <!-- Blue segment (Program A) -->
+              <path d="M75 75 L75 15 A40 40 0 0 1 115 75 Z" fill="#3b82f6" class="slice"/>
+              <!-- Yellow segment (Program B) -->
+              <path d="M75 75 L115 75 A40 40 0 0 1 115 115 Z" fill="#f59e0b" class="slice"/>
+              <!-- Green segment (Program C) -->
+              <path d="M75 75 L115 115 A40 40 0 0 1 75 155 Z" fill="#22c55e" class="slice"/>
+              <!-- White center circle -->
+              <circle cx="75" cy="75" r="35" fill="white" class="slice"/>
+              <!-- Percentage -->
+              <text x="75" y="75" text-anchor="middle" dominant-baseline="central" class="percentage">73%</text>
+            </svg>
+            
+            <div class="legend">
+              <div class="legend-item">
+                <div class="legend-color" style="background-color: #3b82f6;"></div>
+                <span>Program A</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background-color: #f59e0b;"></div>
+                <span>Program B</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background-color: #22c55e;"></div>
+                <span>Program C</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Average Farm Income -->
+        <div class="stat-card">
+          <div class="card-title">Average Farm Income</div>
+          <div class="card-value">$50K</div>
+          <div class="card-change">Last 5 years +7%</div>
+          
+          <div class="bar-chart">
+            <div class="axis"></div>
+            <div class="bar" style="height: 80px; left: 20px;"></div>
+            <div class="bar" style="height: 85px; left: 60px;"></div>
+            <div class="bar" style="height: 50px; left: 100px;"></div>
+            <div class="bar" style="height: 70px; left: 140px;"></div>
+            <div class="bar" style="height: 55px; left: 180px;"></div>
+            <div class="bar" style="height: 80px; left: 220px;"></div>
+            
+            <div class="bar-label" style="left: 20px;">2019</div>
+            <div class="bar-label" style="left: 60px;">2020</div>
+            <div class="bar-label" style="left: 100px;">2021</div>
+            <div class="bar-label" style="left: 140px;">2022</div>
+            <div class="bar-label" style="left: 180px;">2023</div>
+            <div class="bar-label" style="left: 220px;">2024</div>
+          </div>
+        </div>
+
+        <!-- Subsidies Received -->
+        <div class="stat-card">
+          <div class="card-title">Subsidies Received</div>
+          <div class="card-value">$10M</div>
+          <div class="card-change">Current Year +15%</div>
+          
+          <div class="bar-chart">
+            <div class="axis"></div>
+            <div class="bar" style="height: 60px; left: 20px;"></div>
+            <div class="bar" style="height: 65px; left: 60px;"></div>
+            <div class="bar" style="height: 80px; left: 100px;"></div>
+            <div class="bar" style="height: 90px; left: 140px;"></div>
+            
+            <div class="bar-label" style="left: 20px;">Q1</div>
+            <div class="bar-label" style="left: 60px;">Q2</div>
+            <div class="bar-label" style="left: 100px;">Q3</div>
+            <div class="bar-label" style="left: 140px;">Q4</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

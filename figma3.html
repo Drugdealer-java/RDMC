@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics - NRMIMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f5f7;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-button {
+            background-color: #006400;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: #005000;
+        }
+
+        .header-icon {
+            color: white;
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* Left Card - Pie Chart */
+        .pie-card {
+            height: 360px;
+            background-color: #f8c9d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .pie-chart {
+            width: 240px;
+            height: 240px;
+            position: relative;
+            transform: rotate(-90deg);
+        }
+
+        .pie-slice {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .slice-1 {
+            background-color: #a2e2b6;
+            transform: rotate(0deg) scale(2);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .slice-2 {
+            background-color: #c1b5e4;
+            transform: rotate(120deg) scale(2);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .slice-3 {
+            background-color: #f8a5a5;
+            transform: rotate(240deg) scale(2);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .pie-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #222;
+            z-index: 1;
+        }
+
+        .pie-shadow {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            transform: rotate(15deg) translate(30px, 30px);
+            z-index: 0;
+        }
+
+        .pie-title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            color: #222;
+        }
+
+        .pie-value {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        /* Right Cards */
+        .export-card {
+            height: 180px;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .export-header {
+            padding: 20px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .export-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: white;
+        }
+
+        .export-bg {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://placehold.co/600x200/000/000?text=Network+Lines');
+            background-size: cover;
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        .suppliers-card {
+            height: 180px;
+            background-color: #1a1a2e;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .suppliers-header {
+            padding: 20px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .suppliers-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: white;
+        }
+
+        .suppliers-bg {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://placehold.co/600x200/1a1a2e/1a1a2e?text=Bar+Chart');
+            background-size: cover;
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        .hand-icon {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 100px;
+            background-image: url('https://placehold.co/100x100/9c27b0/fff?text=Hand+Up');
+            background-size: cover;
+            z-index: 1;
+        }
+
+        .arrow-up {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background-image: url('https://placehold.co/120x120/f55c5c/fff?text=Arrow+Up');
+            background-size: cover;
+            z-index: 2;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            background-color: #222;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    :root {
+            --brand: #006400;
+            --accent: #2e9a2e;
+            --bg: #f4f5f7;
+            --text: #333333;
+            --surface: #ffffff;
+            --muted: #e0e0e0;
+            --focus: #1a73e8;
+        }
+
+        /* Header/Nav styles to match figma1 */
+        header[role="banner"] { background-color: var(--surface); box-shadow: 0 2px 5px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        .container.header-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 20px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo img { width: 50px; height: 50px; }
+        .logo h1 { font-size: 24px; font-weight: 700; color: var(--brand); }
+
+        .actions { display: flex; align-items: center; gap: 10px; }
+
+        nav.primary-nav { position: relative; }
+        nav.primary-nav ul { list-style: none; display: flex; gap: 16px; align-items: center; }
+        nav.primary-nav a { font-size: 15px; padding: 6px 8px; border-radius: 6px; color: inherit; text-decoration: none; }
+        nav.primary-nav a:hover { color: var(--brand); }
+        nav.primary-nav a[aria-current="page"] { font-weight: 600; color: var(--brand); }
+
+        .login-btn { background: var(--muted); color: var(--brand); padding: 8px 14px; border-radius: 20px; font-size: 14px; }
+        .login-btn:hover { background: var(--brand); color: #fff; }
+
+        .menu-toggle { display: none; background: var(--muted); border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+
+        a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: inline-flex; align-items: center; gap: 6px; }
+            nav.primary-nav ul { display: none; position: absolute; right: 0; top: 48px; background: var(--surface); border: 1px solid var(--muted); border-radius: 10px; padding: 12px; flex-direction: column; min-width: 260px; box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
+            nav.primary-nav.open ul { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header role="banner">
+        <div class="container header-top">
+            <div class="logo">
+                <img src="https://placehold.co/50x50/006400/fff?text=RMDC" alt="RMDC Logo" loading="lazy" decoding="async" width="50" height="50">
+                <h1>RMDC</h1>
+            </div>
+            <div class="actions">
+                <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primary-menu" aria-label="Toggle navigation">
+                    <i class="fas fa-bars" aria-hidden="true"></i> Menu
+                </button>
+            </div>
+            <nav class="primary-nav" aria-label="Primary">
+                <ul class="nav-links" id="primary-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="figma3.html" aria-current="page">Statistics</a></li>
+                    <li><a href="figma4.html">Agricultural Raw Materials</a></li>
+                    <li><a href="figma16.html">Import & Export</a></li>
+                    <li><a href="figma17.html">Industries</a></li>
+                    <li><a class="login-btn" href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Statistics</h1>
+
+        <div class="stats-grid">
+            <!-- Left Card - Pie Chart -->
+            <div class="stat-card pie-card">
+                <div class="pie-title">Total Raw Material Production</div>
+                <div class="pie-value">150,000 tons</div>
+                <div class="pie-chart">
+                    <div class="pie-slice slice-1"></div>
+                    <div class="pie-slice slice-2"></div>
+                    <div class="pie-slice slice-3"></div>
+                    <div class="pie-center">$</div>
+                    <div class="pie-shadow"></div>
+                </div>
+            </div>
+
+            <!-- Right Cards -->
+            <div class="stat-card export-card">
+                <div class="export-header">Raw Material Export Value</div>
+                <div class="export-value">$250 million</div>
+                <div class="export-bg"></div>
+            </div>
+
+            <div class="stat-card suppliers-card">
+                <div class="suppliers-header">Number of Registered Suppliers</div>
+                <div class="suppliers-value">5,000+</div>
+                <div class="suppliers-bg"></div>
+                <div class="hand-icon"></div>
+                <div class="arrow-up"></div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Font Awesome for Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        (function() {
+            const nav = document.querySelector('nav.primary-nav');
+            const toggle = document.getElementById('menuToggle');
+            const menu = document.getElementById('primary-menu');
+            if (!nav || !toggle || !menu) return;
+
+            toggle.addEventListener('click', () => {
+                const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                toggle.setAttribute('aria-expanded', String(!expanded));
+                nav.classList.toggle('open', !expanded);
+                if (!expanded) {
+                    const firstLink = menu.querySelector('a');
+                    firstLink && firstLink.focus();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && nav.classList.contains('open')) {
+                    nav.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.focus();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
